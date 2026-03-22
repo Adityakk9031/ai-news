@@ -1,73 +1,36 @@
-# AI News Aggregation & Broadcasting Dashboard (MVP)
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Version 1.1 · Author: Shrashti Singhal · Culinda
+## Getting Started
 
-## 🚀 Features
-- **Smart Aggregation**: Fetches from 20+ high-signal AI sources (OpenAI, Google, arXiv, etc.).
-- **Deduplication**: Fingerprint and semantic similarity check to keep your feed clean.
-- **AI-Powered Insights**: Uses **Gemini 2.0 Flash Lite** for automatic summarization.
-- **Broadcast Suite**: One-click sharing to LinkedIn, Email, WhatsApp, Blog, and Newsletter.
-- **Admin Control**: Manual refresh and source management dashboard.
-- **Persistent Storage**: Neon Postgres integration for all news and favorites.
+First, run the development server:
 
-## 🛠️ Tech Stack
-- **Frontend**: Next.js 15, Tailwind CSS, TypeScript.
-- **Backend**: Node.js, Express, TypeScript, `node --watch` for development.
-- **AI**: Google Generative AI (Gemini 2.0 Flash Lite).
-- **Database**: Neon (PostgreSQL).
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-## Architecture
-- Ingestion Layer: [sources.ts](file:///d:/ai%20news/backend/src/ingest/sources.ts) + [fetcher.ts](file:///d:/ai%20news/backend/src/ingest/fetcher.ts)
-- Processing: normalization + fingerprint-based dedup
-- Database: [001_init.sql](file:///d:/ai%20news/backend/src/migrations/001_init.sql)
-- API Server: [server.ts](file:///d:/ai%20news/backend/src/server.ts)
-- Dashboard UI: [page.tsx](file:///d:/ai%20news/frontend/src/app/page.tsx), [favorites/page.tsx](file:///d:/ai%20news/frontend/src/app/favorites/page.tsx)
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Flow:
-Sources → Fetcher → Normalize/Dedup → Postgres → API → Dashboard → Broadcast Logs
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## Database Schema
-- sources(id, name, url, type, active)
-- news_items(id, source_id, title, summary, url, published_at, tags, is_duplicate, fingerprint, created_at)
-- users(id, name, email, role)
-- favorites(id, user_id, news_item_id, created_at)
-- broadcast_logs(id, favorite_id, platform, status, timestamp)
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-Migration script: run `npm run migrate` in backend after DB is up.
+## Learn More
 
-## Endpoints (Backend)
-- POST /ingest → fetch all sources and upsert news
-- GET /news?q=...&source=... → list latest items
-- POST /favorites/:newsId → save favorite (user_id=1)
-- DELETE /favorites/:newsId → remove favorite
-- GET /favorites → list favorites
-- POST /broadcast/:favoriteId { platform } → simulate broadcast, logs it
+To learn more about Next.js, take a look at the following resources:
 
-## Getting Started (Docker)
-Prereqs: Docker Desktop
-1. docker compose up -d --build
-2. Apply migration: `docker compose exec backend npm run migrate`
-3. Open http://localhost:3000
-4. Use Refresh on Feed to ingest; Favorite and broadcast in Favorites
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## Getting Started (Local Dev)
-1. Start Postgres locally (user: postgres, pass: postgres, db: ainews)
-2. Backend:
-   - cd backend
-   - set DATABASE_URL=postgres://postgres:postgres@localhost:5432/ainews
-   - npm run migrate
-   - npm run dev
-3. Frontend:
-   - cd frontend
-   - set NEXT_PUBLIC_API_URL=http://localhost:4000
-   - npm run dev
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deployment
-- Dockerfiles included for backend and frontend
-- Compose maps ports: 3000 (frontend), 4000 (backend), 5432 (db)
-- Can be adapted to Render/Fly.io/AWS; use managed Postgres and set DATABASE_URL
+## Deploy on Vercel
 
-## Notes
-- Dedup heuristic: sha256 of normalized title + hostname
-- Broadcast simulated with audit log writes; integrate real APIs later
-- Admin panel optional; extensible via /ingest and sources registry
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
