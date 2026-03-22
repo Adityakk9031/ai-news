@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI News Aggregation & Broadcasting Dashboard
 
-## Getting Started
+A powerful, full-stack Next.js web application that automatically collects, deduplicates, and summarizes the latest AI news from across the internet (OpenAI, Google AI, TechCrunch, arXiv, etc.).
 
-First, run the development server:
+It features an intelligent backend built directly into Next.js API Routes, driven by a PostgreSQL database, and uses **Google Gemini** for AI summarization and social media broadcasting format generation.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Features
+- **Automated RSS/API Ingestion:** Pulls from 21+ configurable sources.
+- **Smart Deduplication:** Avoids redundant news articles using cryptographic fingerprinting and semantic text similarity detection.
+- **Gemini AI Summarization:** Automatically reads long articles and shrinks them down into bite-sized summaries.
+- **Broadcast System:** Takes your favorite articles and automatically formats them for LinkedIn, Email Newsletters, WhatsApp, and Blogs.
+- **Vercel & Render Ready:** Runs natively as a Next.js Full Stack Monorepo.
+
+---
+
+## 🚀 Local Development Setup
+
+### 1. Prerequisites
+- Node.js (v18+)
+- A PostgreSQL Database (like a free tier from Neon.tech)
+- Google Gemini API Key
+
+### 2. Environment Variables
+Create a new file named `.env.local` in the root folder of this repository, and add exactly two keys:
+```env
+DATABASE_URL="postgresql://[user]:[password]@[endpoint].neon.tech/[dbname]?sslmode=require"
+GEMINI_API_KEY="your_google_gemini_api_key"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Install & Run
+```bash
+npm install
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to view the dashboard!
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+*(Note: The first time you run this, you will need to execute the schema migrations on your Postgres database to create the `sources`, `news_items`, and `favorites` tables).*
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🌐 Deployment Instructions
 
-To learn more about Next.js, take a look at the following resources:
+This repository is pre-configured to be deployed as a monolithic full-stack app. **You do not need to split up the frontend and backend.**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Option A: Deploy to Vercel (Recommended)
+Vercel is the creator of Next.js and the absolute easiest way to host this.
+1. Push this repository to GitHub.
+2. In the Vercel Dashboard, click **Add New Project** and import your repository.
+3. Leave "Root Directory" empty.
+4. Go to the "Environment Variables" tab and paste your `DATABASE_URL` and `GEMINI_API_KEY`.
+5. Click **Deploy**.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Option B: Deploy to Render (Web Service)
+If you prefer Render, you must deploy this as a **Web Service** (not a Static Site).
+1. In the Render Dashboard, click **New > Web Service**.
+2. Connect your GitHub repository.
+3. Settings:
+   - **Root Directory:** *(leave blank)*
+   - **Runtime:** `Node` *(Render usually detects this automatically)*
+   - **Build Command:** `npm run build` *(Render usually detects this automatically)*
+   - **Start Command:** `npm start` *(Render usually detects this automatically)*
+4. Under Environment variables, add `DATABASE_URL` and `GEMINI_API_KEY`.
+5. Click **Create Web Service**.
